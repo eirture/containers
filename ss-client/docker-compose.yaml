@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  ss-client:
+    image: eirture/shadowsocks-libev:latest
+    container_name: ss-client
+    restart: unless-stopped
+    volumes:
+      - ./shadowsocks:/etc/shadowsocks
+    command: "ss-local -c /etc/shadowsocks/config.json"
+    network_mode: "host"
+  privoxy:
+    image: splazit/privoxy-alpine:latest
+    container_name: ss-privoxy
+    restart: unless-stopped
+    network_mode: "service:ss-client"
+    volumes:
+      - ./privoxy:/etc/privoxy
+    depends_on:
+      - ss-client
